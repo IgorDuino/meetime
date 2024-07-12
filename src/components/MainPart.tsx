@@ -1,4 +1,5 @@
 import React from 'react';
+import Schedule from "@/components/Schedule";
 
 const Main = () => (
     <main className="max-w-6xl mx-auto p-8">
@@ -24,6 +25,7 @@ const Main = () => (
                 <p className="text-sm text-gray-500 mt-4">Voting is active until 19pm</p>
                 <button className="bg-gradient-to-r from-purple-500 to-purple-700 text-white px-4 py-2 rounded mt-4">SAVE</button>
             </div>
+            <Schedule />
         </div>
     </main>
 );
