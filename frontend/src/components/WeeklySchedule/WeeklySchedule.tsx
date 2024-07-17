@@ -55,7 +55,7 @@ export const WeeklySchedule: React.FC<TimePeekerProps> = ({
             >
               &nbsp;
             </div>
-          ))}``
+          ))}
         </React.Fragment>
       ))}
     </div>

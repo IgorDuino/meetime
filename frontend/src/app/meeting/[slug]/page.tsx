@@ -8,7 +8,8 @@ import {
   TimePeekerSlotType,
 } from "@/components/WeeklySchedule/timepeeker";
 
-const SchedulePage: React.FC = () => {
+const SchedulePage = ({ params }: { params: { slug: string } }) => {
+  console.log(params.slug);
   const [schedule, setSchedule] = useState<WeeklyScheduleType>(defaultSchedule);
 
   const handleSlotClick = (day: string, time: string) => {
