@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 
-import { DateRange } from "react-day-picker"
+import { type DateRange } from "react-day-picker"
 import React from "react"
 
 

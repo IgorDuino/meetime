@@ -1,12 +1,13 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import Link from "next/link"
+import React, { type JSX, type SVGProps } from "react"
 
 export default function Component() {
   return (
     <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
       <div className="grid gap-8">
         <section>
-          <h2 className="text-2xl font-bold mb-4">Meetings You're Organizing</h2>
+          <h2 className="text-2xl font-bold mb-4">Meetings You&apos;re Organizing</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <Card className="bg-card text-card-foreground shadow-sm rounded-lg">
               <CardHeader>
@@ -77,7 +78,7 @@ export default function Component() {
           </div>
         </section>
         <section>
-          <h2 className="text-2xl font-bold mb-4">Meetings You're Participating In</h2>
+          <h2 className="text-2xl font-bold mb-4">Meetings You&apos;re Participating In</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <Card className="bg-card text-card-foreground shadow-sm rounded-lg">
               <CardHeader>
@@ -152,7 +153,7 @@ export default function Component() {
   )
 }
 
-function ClockIcon(props) {
+function ClockIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -173,7 +174,7 @@ function ClockIcon(props) {
 }
 
 
-function UsersIcon(props) {
+function UsersIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -196,7 +197,7 @@ function UsersIcon(props) {
 }
 
 
-function VideoIcon(props) {
+function VideoIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
