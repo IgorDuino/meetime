@@ -6,12 +6,9 @@ await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
 const config = {
-    typescript: {
-        // TODO: return to false
-        ignoreBuildErrors: true,
-    },
     images: {
         dangerouslyAllowSVG: true,
+        unoptimized: true,
         remotePatterns: [
             {
                 protocol: 'https',
@@ -21,7 +18,6 @@ const config = {
             },
         ],
     },
-
 };
 
 export default config;

@@ -1,11 +1,14 @@
-import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { NavigationMenu, NavigationMenuList, NavigationMenuLink } from "@/components/ui/navigation-menu"
-import { type ReactNode } from "react"
+import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
+import Link, { type LinkProps } from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuLink,
+} from "@/components/ui/navigation-menu";
+import { type JSX, type SVGProps, type ReactNode } from "react";
 
-
-export default function Header () {
+export default function Header() {
   return (
     <header className="flex h-20 w-full shrink-0 items-center px-4 md:px-6">
       <Sheet>
@@ -17,13 +20,25 @@ export default function Header () {
         </SheetTrigger>
         <SheetContent side="left">
           <div className="grid gap-2 py-6">
-            <HeaderLink href="/" className="flex w-full items-center py-2 text-lg font-semibold" prefetch={false}>
+            <HeaderLink
+              href="/"
+              className="flex w-full items-center py-2 text-lg font-semibold"
+              prefetch={false}
+            >
               Home
             </HeaderLink>
-            <HeaderLink href="/about" className="flex w-full items-center py-2 text-lg font-semibold" prefetch={false}>
+            <HeaderLink
+              href="/about"
+              className="flex w-full items-center py-2 text-lg font-semibold"
+              prefetch={false}
+            >
               About
             </HeaderLink>
-            <HeaderLink href="/meetings" className="flex w-full items-center py-2 text-lg font-semibold" prefetch={false}>
+            <HeaderLink
+              href="/meetings"
+              className="flex w-full items-center py-2 text-lg font-semibold"
+              prefetch={false}
+            >
               My meetings
             </HeaderLink>
           </div>
@@ -32,51 +47,59 @@ export default function Header () {
       <NavigationMenu className="hidden lg:flex">
         <NavigationMenuList>
           <NavigationMenuLink asChild>
-            <HeaderLink
-              href="/" prefetch={false}
-            >
+            <HeaderLink href="/" prefetch={false}>
               Home
             </HeaderLink>
           </NavigationMenuLink>
           <NavigationMenuLink asChild>
-            <HeaderLink
-              href="/about"  prefetch={false}
-            >
+            <HeaderLink href="/about" prefetch={false}>
               About
             </HeaderLink>
           </NavigationMenuLink>
           <NavigationMenuLink asChild>
-            <HeaderLink
-              href="/meetings" prefetch={false}
-            >
+            <HeaderLink href="/meetings" prefetch={false}>
               My meetings
             </HeaderLink>
           </NavigationMenuLink>
-          <NavigationMenuLink asChild>
-          </NavigationMenuLink>
+          <NavigationMenuLink asChild></NavigationMenuLink>
         </NavigationMenuList>
       </NavigationMenu>
       <div className="ml-auto flex gap-2">
-        <Button variant="outline" className="text-neutral-700" asChild>  
+        <Button variant="outline" className="text-neutral-700" asChild>
           <Link href="/auth">Login</Link>
         </Button>
-        <Button  variant="action" asChild>
-        <Link href="/auth">Sign Up</Link>
+        <Button variant="action" asChild>
+          <Link href="/auth">Sign Up</Link>
         </Button>
       </div>
     </header>
-  )
+  );
+}
+interface HeaderLinkProps extends LinkProps {
+  children: ReactNode;
+  className?: string;
 }
 
-function HeaderLink({ children, ...props }: { children: ReactNode }) {
-    return (
-        <Link  {...props} className="text-neutral-700	 group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors  focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50" prefetch={false}>
-        {children}
-        </Link>
-    )
-    }
+const HeaderLink: React.FC<HeaderLinkProps> = ({
+  children,
+  href,
+  className,
+  prefetch = true,
+  ...props
+}) => {
+  return (
+    <Link
+      href={href}
+      prefetch={prefetch}
+      className={`group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium text-neutral-700 transition-colors focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50 ${className}`}
+      {...props}
+    >
+      {children}
+    </Link>
+  );
+};
 
-function MenuIcon(props) {
+function MenuIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -94,7 +117,5 @@ function MenuIcon(props) {
       <line x1="4" x2="20" y1="6" y2="6" />
       <line x1="4" x2="20" y1="18" y2="18" />
     </svg>
-  )
+  );
 }
-
-
