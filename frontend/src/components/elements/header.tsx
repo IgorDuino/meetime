@@ -57,8 +57,12 @@ export default function Header () {
         </NavigationMenuList>
       </NavigationMenu>
       <div className="ml-auto flex gap-2">
-        <Button variant="outline" className="text-neutral-700">Sign in</Button>
-        <Button  variant="action">Sign Up</Button>
+        <Button variant="outline" className="text-neutral-700" asChild>  
+          <Link href="/auth">Login</Link>
+        </Button>
+        <Button  variant="action" asChild>
+        <Link href="/auth">Sign Up</Link>
+        </Button>
       </div>
     </header>
   )

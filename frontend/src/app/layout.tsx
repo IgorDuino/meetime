@@ -1,6 +1,7 @@
 import "~/styles/globals.css";
 
 import Header from "~/components/elements/header";
+import Footer from "~/components/elements/footer";
 
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
@@ -19,6 +20,7 @@ export default function RootLayout({
       <body> 
       <Header />
       {children}
+      <Footer />
       </body>
     </html>
   );

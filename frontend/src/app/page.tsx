@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
+import Link from "next/link";
 
 export default function HeroSectionImageWithReviews() {
   return (
@@ -19,7 +20,9 @@ export default function HeroSectionImageWithReviews() {
             <div className="mt-7 grid gap-3 w-full sm:inline-flex">
                   <div className="flex w-full max-w-lg items-center space-x-2">
                     <Input type="email" placeholder="Meeting title" />
-                    <Button variant="action" type="submit">Create</Button>
+                    <Button variant="action" type="submit" asChild>
+                      <Link href="/create-event">Create</Link>
+                    </Button>
                   </div>
             </div>
 
