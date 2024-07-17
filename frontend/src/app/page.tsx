@@ -1,6 +1,11 @@
+import React from "react";
+
+import Link from "next/link";
+import Image from "next/image";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input"
-import Link from "next/link";
+
 
 export default function HeroSectionImageWithReviews() {
   return (
@@ -29,7 +34,9 @@ export default function HeroSectionImageWithReviews() {
           </div>
           {/* Col */}
           <div className="">
-            <img
+            <Image
+              width={800}
+              height={700}
               className="w-full rounded-md"
               src="https://placehold.co/800x700"
               alt="Image Description"

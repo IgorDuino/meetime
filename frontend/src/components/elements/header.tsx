@@ -2,7 +2,7 @@ import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { NavigationMenu, NavigationMenuList, NavigationMenuLink } from "@/components/ui/navigation-menu"
-import { ReactNode } from "react"
+import { type ReactNode } from "react"
 
 
 export default function Header () {

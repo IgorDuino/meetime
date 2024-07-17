@@ -1,4 +1,5 @@
-import Link from "next/link"
+import Image from 'next/image'
+
 
 export default function Component() {
   return (
@@ -17,7 +18,7 @@ export default function Component() {
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-5xl mx-auto grid gap-8 md:grid-cols-2">
             <div className="flex items-center justify-center">
-            <img src="/img/about/gcal.png" width={400} height={300} alt="Google Calendar" className="rounded-lg" />
+            <Image src="/img/about/gcal.png" width={400} height={300} alt="Google Calendar" className="rounded-lg" />
             </div>
             <div>
               <h2 className="text-3xl md:text-4xl font-bold mb-4">Import the busy from Google Calendar</h2>
@@ -38,7 +39,7 @@ export default function Component() {
               </p>
             </div>
             <div className="flex items-center justify-center">
-            <img src="/img/about/zoom.png" width={400} height={300} alt="Google Calendar" className="rounded-lg" />
+            <Image src="/img/about/zoom.png" width={400} height={300} alt="Google Calendar" className="rounded-lg" />
             </div>
           </div>
         </div>
