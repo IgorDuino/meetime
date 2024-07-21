@@ -1,3 +1,5 @@
+from django.db.models import Count
+from django.contrib.auth.models import User
 from datetime import datetime, timedelta
 from rest_framework import serializers
 from .models import Meeting, TimeSlot, UserTimeSlot
@@ -11,6 +13,19 @@ class TimeSlotSerializer(serializers.ModelSerializer):
     class Meta:
         model = TimeSlot
         fields = "__all__"
+
+
+class BestTimeSlotSerializer(serializers.ModelSerializer):
+    users = serializers.SerializerMethodField()
+
+    def get_users(self, obj):
+        return User.objects.filter(usertimeslots__timeslot=obj).values_list(
+            "username", flat=True
+        )
+
+    class Meta:
+        model = TimeSlot
+        fields = ["id", "start_time", "end_time", "users"]
 
 
 class UserTimeSlotSerializer(serializers.ModelSerializer):
@@ -33,6 +48,18 @@ class MeetingSerializer(serializers.ModelSerializer):
     users_time_slots = serializers.SerializerMethodField()
     start_date = serializers.DateField(write_only=True)
     end_date = serializers.DateField(write_only=True)
+
+    def to_representation(self, instance):
+        best_time_slots = BestTimeSlotSerializer(
+            TimeSlot.objects.filter(meeting=instance)
+            .annotate(user_count=Count("usertimeslots"))
+            .order_by("-user_count")[:5],
+            many=True,
+        )
+
+        return super().to_representation(instance) | {
+            "best_time_slots": best_time_slots.data
+        }
 
     def create(self, validated_data):
         start_date = validated_data.pop("start_date", None)

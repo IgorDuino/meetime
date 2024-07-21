@@ -8,8 +8,6 @@ from meetings.views import MeetingViewSet
 
 router = DefaultRouter()
 router.register(r"meetings", MeetingViewSet)
-# router.register(r"timeslots", TimeSlotViewSet)
-# router.register(r"usertimeslots", UserTimeSlotViewSet)
 
 schema_view = get_schema_view(
     openapi.Info(
