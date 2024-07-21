@@ -66,6 +66,12 @@ class MeetingViewSet(MyViewSet):
                 {"error": "Time slot not found."}, status=status.HTTP_404_NOT_FOUND
             )
 
+        if UserTimeSlot.objects.filter(user=request.user, timeslot=timeslot).exists():
+            return Response(
+                {"error": "You have already joined this time slot."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         UserTimeSlot.objects.create(user=request.user, timeslot=timeslot)
         return Response(
             {"message": "Successfully joined the time slot."},
