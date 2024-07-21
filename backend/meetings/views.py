@@ -5,13 +5,11 @@ from .permissions import IsOwnerOrStaff, WithAccessCode, any_of, all_of
 from .models import Meeting, TimeSlot, UserTimeSlot
 from .serializers import (
     MeetingSerializer,
-    CreateTimeSlotsSerializer,
     JoinMeetingSerializer,
 )
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
-from datetime import datetime, timedelta
 
 
 class MeetingViewSet(MyViewSet):
