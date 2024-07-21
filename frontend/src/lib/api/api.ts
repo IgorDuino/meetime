@@ -1,4 +1,4 @@
-import { User, Meeting, TimeSlot, UserTimeSlot, AuthResponse, JoinMeetingRequest } from './interfaces';
+import {  type Meeting ,type AuthResponse } from './interfaces';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -64,7 +64,7 @@ export const createMeeting = async (meetingData: Partial<Meeting>): Promise<Meet
     return apiRequest<Meeting>('/meetings/', 'POST', meetingData);
 };
 
-// Join a meeting with a specific time slot
-export const joinMeeting = async (id: number, joinRequest: JoinMeetingRequest): Promise<void> => {
-    await apiRequest<void>(`/meetings/${id}/join/`, 'POST', joinRequest);
-};
+// // Join a meeting with a specific time slot
+// export const joinMeeting = async (id: number, joinRequest: JoinMeetingRequest): Promise<void> => {
+//     await apiRequest<void>(`/meetings/${id}/join/`, 'POST', joinRequest);
+// };

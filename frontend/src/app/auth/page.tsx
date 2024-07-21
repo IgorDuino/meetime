@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { setToken } from "~/lib/api/token";
+import { login, setToken } from "@/lib/api/api";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,29 +22,13 @@ export default function LoginForm() {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    const res = await fetch(`${API_URL}/auth/login/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password }),
-    });
-
-    if (!res.ok) {
-      setError("Invalid username or password");
-      setLoading(false);
-      return;
-    }
-
-    const data = await res.json();
-    setToken(data.key);
+    const token = await login(username, password);
+    setToken(token);
     router.push("/");
   };
 

@@ -9,7 +9,7 @@ import Link from "next/link";
 import React, { type JSX, type SVGProps } from "react";
 
 interface MeetingCardProps {
-  id: string;
+  id: number;
   title: string;
   description: string;
   videoLink: string;

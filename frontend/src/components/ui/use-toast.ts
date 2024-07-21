@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
 "use client"
 
 // Inspired by react-hot-toast library
