@@ -1,3 +1,8 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { isAuthenticated, clearToken } from "@/lib/token";
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 import Link, { type LinkProps } from "next/link";
 import { Button } from "@/components/ui/button";
@@ -9,6 +14,19 @@ import {
 import { type JSX, type SVGProps, type ReactNode } from "react";
 
 export default function Header() {
+  const [auth, setAuth] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    setAuth(isAuthenticated());
+  }, []);
+
+  const handleLogout = () => {
+    clearToken();
+    setAuth(false);
+    router.push("/");
+  };
+
   return (
     <header className="flex h-20 w-full shrink-0 items-center px-4 md:px-6">
       <Sheet>
@@ -65,16 +83,34 @@ export default function Header() {
         </NavigationMenuList>
       </NavigationMenu>
       <div className="ml-auto flex gap-2">
-        <Button variant="outline" className="text-neutral-700" asChild>
-          <Link href="/auth">Login</Link>
-        </Button>
-        <Button variant="action" asChild>
-          <Link href="/auth">Sign Up</Link>
-        </Button>
+        {auth ? (
+          <>
+            <Button variant="outline" className="text-neutral-700" asChild>
+              <Link href="/account">Account</Link>
+            </Button>
+            <Button
+              variant="outline"
+              className="text-neutral-700"
+              onClick={handleLogout}
+            >
+              Logout
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button variant="outline" className="text-neutral-700" asChild>
+              <Link href="/auth">Login</Link>
+            </Button>
+            <Button variant="action" asChild>
+              <Link href="/auth">Sign Up</Link>
+            </Button>
+          </>
+        )}
       </div>
     </header>
   );
 }
+
 interface HeaderLinkProps extends LinkProps {
   children: ReactNode;
   className?: string;
