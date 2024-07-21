@@ -6,8 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 config = AutoConfig(search_path=BASE_DIR.parent)
 
-SECRET_KEY = "django-insecure-@_02lxxy-i88b317^$@t^vfl-a4rblc)n!))*mbpypp6jd!eg3"
-
+SECRET_KEY = config("SECRET_KEY")
 
 DEBUG = True
 MAIN_HOST = config("MAIN_HOST")
