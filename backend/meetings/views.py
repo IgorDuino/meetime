@@ -1,11 +1,12 @@
-from rest_framework import viewsets, permissions
+from .viewsets import MyViewSet
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from .permissions import IsOwnerOrStaff, WithAccessCode, any_of, all_of
+
 from .models import Meeting, TimeSlot, UserTimeSlot
 from .serializers import (
     MeetingSerializer,
-    TimeSlotSerializer,
-    UserTimeSlotSerializer,
     CreateTimeSlotsSerializer,
-    AccessCodeSerializer,
+    JoinMeetingSerializer,
 )
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -13,137 +14,62 @@ from rest_framework import status
 from datetime import datetime, timedelta
 
 
-class MeetingViewSet(viewsets.ModelViewSet):
+class MeetingViewSet(MyViewSet):
     queryset = Meeting.objects.all()
     serializer_class = MeetingSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
-    def perform_create(self, serializer):
-        serializer.save(created_by=self.request.user)
+    permission_classes_by_action = {
+        "default": [IsOwnerOrStaff],
+        "create": [AllowAny],
+        "retrieve": [any_of(IsOwnerOrStaff, WithAccessCode)],
+        "join": [any_of(IsOwnerOrStaff, all_of(IsAuthenticated, WithAccessCode))],
+        "update": [IsOwnerOrStaff],
+        "partial_update": [IsOwnerOrStaff],
+        "destroy": [IsOwnerOrStaff],
+    }
 
-    @action(detail=True, methods=["post"])
-    def create_timeslots(self, request, pk=None):
+    def list(self, request):
+        queryset = (
+            self.get_queryset()
+            if request.user.is_staff
+            else request.user.meetings.all()
+        )
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
         meeting = self.get_object()
+        serializer = self.get_serializer(meeting)
+        return Response(serializer.data)
 
-        # Проверяем, что текущий пользователь является создателем встречи
-        if meeting.created_by != request.user:
-            return Response(
-                {"error": "You are not the creator of this meeting."},
-                status=status.HTTP_403_FORBIDDEN,
-            )
-
-        serializer = CreateTimeSlotsSerializer(data=request.data)
-        if serializer.is_valid():
-            start_date = serializer.validated_data["start_date"]
-            end_date = serializer.validated_data["end_date"]
-
-            # Проверяем, что начальная дата меньше или равна конечной дате
-            if start_date > end_date:
-                return Response(
-                    {"error": "Start date must be before or equal to end date."},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-
-            timeslots = []
-            current_date = start_date
-
-            while current_date <= end_date:
-                for hour in range(9, 20):
-                    start_time = datetime.combine(
-                        current_date, datetime.min.time()
-                    ).replace(hour=hour)
-                    end_time = start_time + timedelta(hours=1)
-                    timeslots.append(
-                        TimeSlot(
-                            meeting=meeting, start_time=start_time, end_time=end_time
-                        )
-                    )
-
-                current_date += timedelta(days=1)
-
-            TimeSlot.objects.bulk_create(timeslots)
-
-            return Response(
-                {"message": "Time slots created successfully."},
-                status=status.HTTP_201_CREATED,
-            )
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    @action(detail=True, methods=["post"], url_path="join-timeslot")
-    def join_timeslot(self, request, pk=None):
-        meeting = self.get_object()
-        serializer = AccessCodeSerializer(data=request.data)
+    def create(self, request):
+        serializer = self.get_serializer(data=request.data)
 
         if serializer.is_valid():
-            access_code = serializer.validated_data["access_code"]
-            timeslot_id = serializer.validated_data["timeslot_id"]
+            serializer.save(created_by=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-            if access_code != meeting.access_code:
-                return Response(
-                    {"error": "Invalid access code."}, status=status.HTTP_403_FORBIDDEN
-                )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-            try:
-                timeslot = TimeSlot.objects.get(pk=timeslot_id, meeting=meeting)
-            except TimeSlot.DoesNotExist:
-                return Response(
-                    {"error": "Time slot not found."}, status=status.HTTP_404_NOT_FOUND
-                )
-
-            UserTimeSlot.objects.create(user=request.user, timeslot=timeslot)
-            return Response(
-                {"message": "Successfully joined the time slot."},
-                status=status.HTTP_200_OK,
-            )
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    @action(detail=True, methods=["post"], url_path="list-timeslot-users")
-    def list_timeslot_users(self, request, pk=None):
+    @action(detail=True, methods=["post"], url_path="join")
+    def join(self, request, pk=None):
         meeting = self.get_object()
-        serializer = AccessCodeSerializer(data=request.data)
+        serializer = JoinMeetingSerializer(data=request.data)
 
-        if serializer.is_valid():
-            access_code = serializer.validated_data["access_code"]
-            timeslot_id = serializer.validated_data["timeslot_id"]
-
-            if access_code != meeting.access_code:
-                return Response(
-                    {"error": "Invalid access code."}, status=status.HTTP_403_FORBIDDEN
-                )
-
-            try:
-                timeslot = TimeSlot.objects.get(pk=timeslot_id, meeting=meeting)
-            except TimeSlot.DoesNotExist:
-                return Response(
-                    {"error": "Time slot not found."}, status=status.HTTP_404_NOT_FOUND
-                )
-
-            user_timeslots = UserTimeSlot.objects.filter(timeslot=timeslot)
-            data = UserTimeSlotSerializer(user_timeslots, many=True).data
-
-            return Response(data, status=status.HTTP_200_OK)
-        else:
+        if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+        timeslot_id = serializer.validated_data["timeslot_id"]
 
-class TimeSlotViewSet(viewsets.ModelViewSet):
-    queryset = TimeSlot.objects.all()
-    serializer_class = TimeSlotSerializer
-    permission_classes = [permissions.IsAdminUser]
+        try:
+            timeslot = TimeSlot.objects.get(pk=timeslot_id, meeting=meeting)
+        except TimeSlot.DoesNotExist:
+            return Response(
+                {"error": "Time slot not found."}, status=status.HTTP_404_NOT_FOUND
+            )
 
-    def perform_create(self, serializer):
-        meeting = Meeting.objects.get(pk=self.request.data["meeting"])
-        serializer.save(meeting=meeting)
-
-
-class UserTimeSlotViewSet(viewsets.ModelViewSet):
-    queryset = UserTimeSlot.objects.all()
-    serializer_class = UserTimeSlotSerializer
-    permission_classes = [permissions.IsAdminUser]
-
-    def perform_create(self, serializer):
-        user = self.request.user
-        timeslot = TimeSlot.objects.get(pk=self.request.data["timeslot"])
-        serializer.save(user=user, timeslot=timeslot)
+        UserTimeSlot.objects.create(user=request.user, timeslot=timeslot)
+        return Response(
+            {"message": "Successfully joined the time slot."},
+            status=status.HTTP_200_OK,
+        )

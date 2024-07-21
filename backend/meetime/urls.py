@@ -4,12 +4,12 @@ from rest_framework.routers import DefaultRouter
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
-from meetings.views import MeetingViewSet, TimeSlotViewSet, UserTimeSlotViewSet
+from meetings.views import MeetingViewSet
 
 router = DefaultRouter()
 router.register(r"meetings", MeetingViewSet)
-router.register(r"timeslots", TimeSlotViewSet)
-router.register(r"usertimeslots", UserTimeSlotViewSet)
+# router.register(r"timeslots", TimeSlotViewSet)
+# router.register(r"usertimeslots", UserTimeSlotViewSet)
 
 schema_view = get_schema_view(
     openapi.Info(
