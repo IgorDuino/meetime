@@ -6,6 +6,8 @@ import Footer from "~/components/elements/footer";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 
+import { SpeedInsights } from '@vercel/speed-insights/next';
+
 export const metadata: Metadata = {
   title: "MeeTime",
   description: "choose best time to meet",
@@ -23,6 +25,7 @@ export default function RootLayout({
       {children}
       </main>
       <Footer />
+      <SpeedInsights />
       </body>
     </html>
   );
