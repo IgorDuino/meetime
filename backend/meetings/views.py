@@ -131,7 +131,7 @@ class MeetingViewSet(viewsets.ModelViewSet):
 class TimeSlotViewSet(viewsets.ModelViewSet):
     queryset = TimeSlot.objects.all()
     serializer_class = TimeSlotSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAdminUser]
 
     def perform_create(self, serializer):
         meeting = Meeting.objects.get(pk=self.request.data["meeting"])
@@ -141,7 +141,7 @@ class TimeSlotViewSet(viewsets.ModelViewSet):
 class UserTimeSlotViewSet(viewsets.ModelViewSet):
     queryset = UserTimeSlot.objects.all()
     serializer_class = UserTimeSlotSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAdminUser]
 
     def perform_create(self, serializer):
         user = self.request.user
