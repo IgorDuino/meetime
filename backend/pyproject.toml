@@ -13,6 +13,7 @@ python-decouple = "^3.8"
 drf-yasg = "^1.21.7"
 dj-rest-auth = "^6.0.0"
 django-allauth = {extras = ["all"], version = "^0.63.6"}
+django-cors-headers = "^4.4.0"
 
 
 [build-system]
