@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { isAuthenticated, clearToken } from "@/lib/token";
+import { isAuthenticated, clearToken } from "~/lib/api/token";
 import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 import Link, { type LinkProps } from "next/link";
 import { Button } from "@/components/ui/button";

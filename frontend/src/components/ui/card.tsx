@@ -1,5 +1,5 @@
 import * as React from "react";
-import Link from "next/link";
+
 import { cn } from "@/lib/utils";
 
 const Card = React.forwardRef<
@@ -31,18 +31,16 @@ CardHeader.displayName = "CardHeader";
 
 const CardTitle = React.forwardRef<
   HTMLParagraphElement,
-  React.AnchorHTMLAttributes<HTMLHeadingElement> & { href: string }
->(({ className, href, ...props }, ref) => (
-  <Link href={href}>
-    <h3
-      ref={ref}
-      className={cn(
-        "text-2xl font-semibold leading-none tracking-tight",
-        className,
-      )}
-      {...props}
-    />
-  </Link>
+  React.HTMLAttributes<HTMLHeadingElement>
+>(({ className, ...props }, ref) => (
+  <h3
+    ref={ref}
+    className={cn(
+      "text-2xl font-semibold leading-none tracking-tight",
+      className,
+    )}
+    {...props}
+  />
 ));
 CardTitle.displayName = "CardTitle";
 

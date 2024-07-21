@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { setToken } from "@/lib/token";
+import { setToken } from "~/lib/api/token";
 import { Button } from "@/components/ui/button";
 import {
   Card,

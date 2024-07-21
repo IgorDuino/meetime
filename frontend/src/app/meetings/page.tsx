@@ -8,26 +8,38 @@ import {
 import Link from "next/link";
 import React, { type JSX, type SVGProps } from "react";
 
+interface MeetingCardProps {
+  id: string;
+  title: string;
+  description: string;
+  videoLink: string;
+  timeSlots: string;
+  participants: number;
+}
+
 function MeetingCard({
-  token,
+  id,
   title,
   description,
   videoLink,
   timeSlots,
   participants,
-}) {
+}: MeetingCardProps) {
   return (
     <Card className="rounded-lg bg-card text-card-foreground shadow-sm">
-      <CardHeader>
-        <CardTitle href={"/meeting/" + token}>{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
-      </CardHeader>
+      <Link href={"/meeting/" + id}>
+        <CardHeader>
+          <CardTitle>{title}</CardTitle>
+          <CardDescription>{description}</CardDescription>
+        </CardHeader>
+      </Link>
+
       <CardContent className="space-y-2">
         <div className="flex items-center gap-2">
           <VideoIcon className="h-5 w-5 text-muted-foreground" />
           {videoLink ? (
             <Link
-              href={videoLink!}
+              href={videoLink}
               className="text-primary hover:underline"
               prefetch={false}
             >
@@ -59,88 +71,14 @@ export default function Component() {
             Meetings You&apos;re Organizing
           </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <Card className="rounded-lg bg-card text-card-foreground shadow-sm">
-              <CardHeader>
-                <CardTitle>Weekly Team Meeting</CardTitle>
-                <CardDescription>
-                  Discuss project updates and roadmap
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <VideoIcon className="h-5 w-5 text-muted-foreground" />
-                  <Link
-                    href="#"
-                    className="text-primary hover:underline"
-                    prefetch={false}
-                  >
-                    Join Zoom Meeting
-                  </Link>
-                </div>
-                <div className="flex items-center gap-2">
-                  <ClockIcon className="h-5 w-5 text-muted-foreground" />
-                  <p>Best time slots: Tuesdays 2-3 PM</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <UsersIcon className="h-5 w-5 text-muted-foreground" />
-                  <p>10 participants</p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="rounded-lg bg-card text-card-foreground shadow-sm">
-              <CardHeader>
-                <CardTitle>Design Review</CardTitle>
-                <CardDescription>Review new website designs</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <VideoIcon className="h-5 w-5 text-muted-foreground" />
-                  <Link
-                    href="#"
-                    className="text-primary hover:underline"
-                    prefetch={false}
-                  >
-                    Join Zoom Meeting
-                  </Link>
-                </div>
-                <div className="flex items-center gap-2">
-                  <ClockIcon className="h-5 w-5 text-muted-foreground" />
-                  <p>Best time slots: Fridays 11 AM-12 PM</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <UsersIcon className="h-5 w-5 text-muted-foreground" />
-                  <p>5 participants</p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="rounded-lg bg-card text-card-foreground shadow-sm">
-              <CardHeader>
-                <CardTitle>Engineering Sync</CardTitle>
-                <CardDescription>
-                  Discuss technical roadblocks and solutions
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <VideoIcon className="h-5 w-5 text-muted-foreground" />
-                  <Link
-                    href="#"
-                    className="text-primary hover:underline"
-                    prefetch={false}
-                  >
-                    Join Zoom Meeting
-                  </Link>
-                </div>
-                <div className="flex items-center gap-2">
-                  <ClockIcon className="h-5 w-5 text-muted-foreground" />
-                  <p>Best time slots: Wednesdays 4-5 PM</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <UsersIcon className="h-5 w-5 text-muted-foreground" />
-                  <p>8 participants</p>
-                </div>
-              </CardContent>
-            </Card>
+            <MeetingCard
+              description={"Discuss upcoming product features"}
+              id={1}
+              participants={15}
+              timeSlots={"Mondays 3-4 PM"}
+              title={"Product Roadmap Discussion"}
+              videoLink={"https://meet.google.com/landing"}
+            />
           </div>
         </section>
         <section>
