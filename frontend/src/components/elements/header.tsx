@@ -102,7 +102,7 @@ export default function Header() {
               <Link href="/auth">Login</Link>
             </Button>
             <Button variant="action" asChild>
-              <Link href="/auth">Sign Up</Link>
+              <Link href="/auth/registration">Sign Up</Link>
             </Button>
           </>
         )}
