@@ -38,6 +38,7 @@ const TimeSlotTable: React.FC<TimeSlotTableProps> = ({ meeting }) => {
   }, [meeting.users_time_slots]);
 
   const handleSlotClick = async (slotId: number) => {
+    console.log(1);
     if (isSelected(slotId)) {
       try {
         await leftMeeting(meeting.id!, { timeslot_id: slotId });
@@ -71,7 +72,7 @@ const TimeSlotTable: React.FC<TimeSlotTableProps> = ({ meeting }) => {
         onClick={() => handleSlotClick(slot.id)}
       />
     ) : (
-      <div key={`${day}-${hour}`} className="border bg-white p-2" />
+      <div key={`${day}-${hour}`} className="border bg-red-100 p-2" />
     );
   };
 

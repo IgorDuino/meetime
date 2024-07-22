@@ -86,7 +86,7 @@ export default function Header() {
         {auth ? (
           <>
             <Button variant="outline" className="text-neutral-700" asChild>
-              <Link href="/account">Account</Link>
+              <Link href="/meetings">Account</Link>
             </Button>
             <Button
               variant="outline"
