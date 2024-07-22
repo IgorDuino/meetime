@@ -9,6 +9,7 @@ SECRET_KEY = config("SECRET_KEY")
 
 DEBUG = True
 MAIN_HOST = config("MAIN_HOST")
+MAIN_URL = config("MAIN_URL")
 
 ALLOWED_HOSTS = [MAIN_HOST]
 
@@ -41,6 +42,8 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
     ],
 }
+
+CSRF_TRUSTED_ORIGINS = [MAIN_URL]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
