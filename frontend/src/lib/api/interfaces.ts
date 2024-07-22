@@ -3,14 +3,23 @@ export interface User {
     username: string;
 }
 
+export interface BestTimeSlot {
+    id: number;
+    start_time: string;
+    end_time: string;
+    users: string[];
+}
+
 export interface Meeting {
     id: number;
     title: string;
     description: string | null;
+    call_link: string | null;
     access_code: string;
     created_by: string;
     created_at: string;
     timeslots: TimeSlot[];
+    best_time_slots: BestTimeSlot[];
     users_time_slots: UserTimeSlot[];
 }
 
@@ -37,4 +46,8 @@ export interface UserTimeSlot {
 export interface AuthResponse {
     key: string | PromiseLike<string>;
     token: string;
+}
+
+export interface JoinLeftMeetingRequest {
+    timeslot_id: number;
 }

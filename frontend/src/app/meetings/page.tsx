@@ -1,3 +1,6 @@
+"use client";
+
+import React, { useEffect, useState, type JSX, type SVGProps } from "react";
 import {
   Card,
   CardHeader,
@@ -6,15 +9,67 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import Link from "next/link";
-import React, { type JSX, type SVGProps } from "react";
 
-interface MeetingCardProps {
-  id: number;
-  title: string;
-  description: string;
-  videoLink: string;
-  timeSlots: string;
-  participants: number;
+import { fetchMeetings } from "@/lib/api/api";
+import { type Meeting } from "@/lib/api/interfaces";
+
+function MeetingCards({ participant }: { participant: boolean }) {
+  const [loading, setLoading] = useState(true);
+  const [meetings, setMeetings] = useState<Meeting[]>();
+
+  useEffect(() => {
+    async function fetchMeeings() {
+      const meetings_ = await fetchMeetings(participant);
+      setMeetings(meetings_);
+
+      setLoading(false);
+    }
+
+    void fetchMeeings();
+  }, [participant]);
+
+  if (loading) {
+    return (
+      <div className="container">
+        <div className="text-center">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!meetings || meetings.length === 0) {
+    return (
+      <div className="container">
+        <div className="text-center">No meetings found</div>
+      </div>
+    );
+  }
+
+  const bestTimeSlotsToOneString = (
+    bestTimeSlots: Meeting["best_time_slots"],
+  ) => {
+    return bestTimeSlots
+      .map((bts) => {
+        const users = bts.users.map((u) => u).join(", ");
+        return `${bts.start_time} - ${bts.end_time} (${users})`;
+      })
+      .join(", ");
+  };
+
+  return (
+    <>
+      {meetings.map((meeting) => (
+        <MeetingCard
+          key={meeting.id}
+          id={meeting.id}
+          title={meeting.title}
+          description={meeting.description ?? ""}
+          videoLink={meeting.call_link ?? ""}
+          bestTimeSlots={bestTimeSlotsToOneString(meeting.best_time_slots)}
+          participants={meeting.users_time_slots.length}
+        />
+      ))}
+    </>
+  );
 }
 
 function MeetingCard({
@@ -22,9 +77,16 @@ function MeetingCard({
   title,
   description,
   videoLink,
-  timeSlots,
+  bestTimeSlots,
   participants,
-}: MeetingCardProps) {
+}: {
+  id: number;
+  title: string;
+  description: string;
+  videoLink: string;
+  bestTimeSlots: string;
+  participants: number;
+}) {
   return (
     <Card className="rounded-lg bg-card text-card-foreground shadow-sm">
       <Link href={"/meeting/" + id}>
@@ -51,7 +113,7 @@ function MeetingCard({
         </div>
         <div className="flex items-center gap-2">
           <ClockIcon className="h-5 w-5 text-muted-foreground" />
-          <p>Best time slots: {timeSlots}</p>
+          <p>Best time slots: {bestTimeSlots}</p>
         </div>
         <div className="flex items-center gap-2">
           <UsersIcon className="h-5 w-5 text-muted-foreground" />
@@ -62,7 +124,7 @@ function MeetingCard({
   );
 }
 
-export default function Component() {
+export default function Page() {
   return (
     <div className="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
       <div className="grid gap-8">
@@ -71,14 +133,7 @@ export default function Component() {
             Meetings You&apos;re Organizing
           </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <MeetingCard
-              description={"Discuss upcoming product features"}
-              id={1}
-              participants={15}
-              timeSlots={"Mondays 3-4 PM"}
-              title={"Product Roadmap Discussion"}
-              videoLink={"https://meet.google.com/landing"}
-            />
+            <MeetingCards participant={false} />
           </div>
         </section>
         <section>
@@ -86,88 +141,7 @@ export default function Component() {
             Meetings You&apos;re Participating In
           </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <Card className="rounded-lg bg-card text-card-foreground shadow-sm">
-              <CardHeader>
-                <CardTitle>Product Roadmap Discussion</CardTitle>
-                <CardDescription>
-                  Discuss upcoming product features
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <VideoIcon className="h-5 w-5 text-muted-foreground" />
-                  <Link
-                    href="#"
-                    className="text-primary hover:underline"
-                    prefetch={false}
-                  >
-                    Join Zoom Meeting
-                  </Link>
-                </div>
-                <div className="flex items-center gap-2">
-                  <ClockIcon className="h-5 w-5 text-muted-foreground" />
-                  <p>Best time slots: Mondays 3-4 PM</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <UsersIcon className="h-5 w-5 text-muted-foreground" />
-                  <p>15 participants</p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="rounded-lg bg-card text-card-foreground shadow-sm">
-              <CardHeader>
-                <CardTitle>Sales Team Sync</CardTitle>
-                <CardDescription>
-                  Discuss sales pipeline and customer updates
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <VideoIcon className="h-5 w-5 text-muted-foreground" />
-                  <Link
-                    href="#"
-                    className="text-primary hover:underline"
-                    prefetch={false}
-                  >
-                    Join Zoom Meeting
-                  </Link>
-                </div>
-                <div className="flex items-center gap-2">
-                  <ClockIcon className="h-5 w-5 text-muted-foreground" />
-                  <p>Best time slots: Thursdays 2-3 PM</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <UsersIcon className="h-5 w-5 text-muted-foreground" />
-                  <p>12 participants</p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="rounded-lg bg-card text-card-foreground shadow-sm">
-              <CardHeader>
-                <CardTitle>Marketing Team Brainstorm</CardTitle>
-                <CardDescription>Discuss new campaign ideas</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <VideoIcon className="h-5 w-5 text-muted-foreground" />
-                  <Link
-                    href="#"
-                    className="text-primary hover:underline"
-                    prefetch={false}
-                  >
-                    Join Zoom Meeting
-                  </Link>
-                </div>
-                <div className="flex items-center gap-2">
-                  <ClockIcon className="h-5 w-5 text-muted-foreground" />
-                  <p>Best time slots: Tuesdays 11 AM-12 PM</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <UsersIcon className="h-5 w-5 text-muted-foreground" />
-                  <p>9 participants</p>
-                </div>
-              </CardContent>
-            </Card>
+            <MeetingCards participant={true} />
           </div>
         </section>
       </div>

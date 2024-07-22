@@ -1,39 +1,44 @@
 "use client";
 
-import React, { useState } from "react";
-import WeeklySchedule from "@/components/WeeklySchedule/WeeklySchedule";
-import {
-  type WeeklySchedule as WeeklyScheduleType,
-  schedule as defaultSchedule,
-  TimePeekerSlotType,
-} from "@/components/WeeklySchedule/timepeeker";
+import React, { useEffect, useState } from "react";
+import { fetchMeeting } from "@/lib/api/api";
+import { type Meeting } from "@/lib/api/interfaces";
+import TimeSlotTable from "@/components/WeeklySchedule/TimeSlotTable";
 
-const SchedulePage = ({ params }: { params: { slug: string } }) => {
-  console.log(params.slug);
-  const [schedule, setSchedule] = useState<WeeklyScheduleType>(defaultSchedule);
-
-  const handleSlotClick = (day: string, time: string) => {
-    setSchedule((prevSchedule) => {
-      const newSchedule = { ...prevSchedule };
-      if (newSchedule[day]?.[time]) {
-        newSchedule[day][time] =
-          newSchedule[day][time] === TimePeekerSlotType.Available
-            ? TimePeekerSlotType.Busy
-            : TimePeekerSlotType.Available;
-      }
-      newSchedule[day]?.[time] === TimePeekerSlotType.Available
-        ? TimePeekerSlotType.Busy
-        : TimePeekerSlotType.Available;
-      return newSchedule;
-    });
+interface MeetingSchedulerProps {
+  params: {
+    slug: number;
   };
+}
 
+const MeetingScheduler: React.FC<MeetingSchedulerProps> = ({ params }) => {
+  const [meeting, setMeeting] = useState<Meeting>();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchMeeing() {
+      const meeting = await fetchMeeting(params.slug);
+      setMeeting(meeting);
+      setLoading(false);
+    }
+
+    void fetchMeeing();
+  }, [params.slug]);
+
+  if (loading) {
+    return (
+      <div className="container">
+        <h1 className="mb-4 text-2xl font-bold">Meeting Scheduler</h1>
+        <div className="text-center">Loading...</div>
+      </div>
+    );
+  }
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="mb-4 text-2xl font-bold">Weekly Schedule</h1>
-      <WeeklySchedule schedule={schedule} onSlotClick={handleSlotClick} />
+    <div className="container">
+      <h1 className="mb-4 text-2xl font-bold">Meeting Scheduler</h1>
+      <TimeSlotTable meeting={meeting!} />
     </div>
   );
 };
 
-export default SchedulePage;
+export default MeetingScheduler;

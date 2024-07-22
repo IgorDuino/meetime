@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import {
   Card,
   CardHeader,
@@ -78,7 +79,9 @@ export default function Component() {
     }
   };
 
-  return (
+  return;
+  <Suspense>
+    (
     <div className="container py-24 lg:py-32">
       <form onSubmit={handleSubmit}>
         <div className="grid gap-8 md:grid-cols-2">
@@ -167,5 +170,6 @@ export default function Component() {
       </form>
       <Toaster />
     </div>
-  );
+    )
+  </Suspense>;
 }

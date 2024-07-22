@@ -1,4 +1,4 @@
-import {  type Meeting ,type AuthResponse } from './interfaces';
+import {  type Meeting ,type AuthResponse, type JoinLeftMeetingRequest } from './interfaces';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -47,20 +47,24 @@ export const login = async (username: string, password: string): Promise<string>
     return response.key;
 };
 
-export const fetchMeetings = async (): Promise<Meeting[]> => {
-    return apiRequest<Meeting[]>('/meetings/', 'GET');
+export const fetchMeetings = async (participant=false): Promise<Meeting[]> => {
+    const url = participant ? '/meetings/?participant' : '/meetings/';
+    return apiRequest<Meeting[]>(url, 'GET');
 };
 
-export const fetchMeeting = async (id: number, token: string, accessCode?: string): Promise<Meeting> => {
+export const fetchMeeting = async (id: number, accessCode?: string): Promise<Meeting> => {
     const url = accessCode ? `/meetings/${id}/?access_code=${accessCode}` : `/meetings/${id}/`;
-    return apiRequest<Meeting>(url, 'GET', token);
+    return apiRequest<Meeting>(url, 'GET');
 };
 
 export const createMeeting = async (meetingData: Partial<Meeting>): Promise<Meeting> => {
     return apiRequest<Meeting>('/meetings/', 'POST', meetingData);
 };
 
-// // Join a meeting with a specific time slot
-// export const joinMeeting = async (id: number, joinRequest: JoinMeetingRequest): Promise<void> => {
-//     await apiRequest<void>(`/meetings/${id}/join/`, 'POST', joinRequest);
-// };
+export const joinMeeting = async (meetingId: number, data: JoinLeftMeetingRequest): Promise<void> => {
+    await apiRequest<void>(`/meetings/${meetingId}/join/`, 'POST', data);
+};
+
+export const leftMeeting = async (meetingId: number, data: JoinLeftMeetingRequest): Promise<void> => {
+    await apiRequest<void>(`/meetings/${meetingId}/left/`, 'POST', data);
+};
