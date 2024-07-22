@@ -1,6 +1,6 @@
 import {  type Meeting ,type AuthResponse } from './interfaces';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const setToken = (token: string) => {
   localStorage.setItem("token", token);
@@ -12,7 +12,7 @@ export const getToken = (): string | null => {
 
 export function isAuthenticated(): boolean {
   const token = getToken();
-  return !!token; // Возвращает true, если токен существует
+  return token !== undefined;
 }
 
 export function clearToken(): void {
@@ -23,10 +23,10 @@ const apiRequest = async <T>(url: string, method: string, body?: unknown, useTok
     const headers: HeadersInit = {
         'Content-Type': 'application/json',
     };
-
     if (useToken && isAuthenticated()) {
         headers.Authorization = `Token ${getToken()}`;
     }
+    console.log(localStorage)
 
     const response = await fetch(`${API_BASE_URL}${url}`, {
         method,
@@ -42,24 +42,20 @@ const apiRequest = async <T>(url: string, method: string, body?: unknown, useTok
     return response.json() as Promise<T>;
 };
 
-// Function to login and get a token
 export const login = async (username: string, password: string): Promise<string> => {
     const response = await apiRequest<AuthResponse>('/auth/login/', 'POST', { username, password }, false);
-    return response.token;
+    return response.key;
 };
 
-// Fetch all meetings (staff) or user-specific meetings
 export const fetchMeetings = async (): Promise<Meeting[]> => {
     return apiRequest<Meeting[]>('/meetings/', 'GET');
 };
 
-// Fetch a specific meeting by ID
 export const fetchMeeting = async (id: number, token: string, accessCode?: string): Promise<Meeting> => {
     const url = accessCode ? `/meetings/${id}/?access_code=${accessCode}` : `/meetings/${id}/`;
     return apiRequest<Meeting>(url, 'GET', token);
 };
 
-// Create a new meeting
 export const createMeeting = async (meetingData: Partial<Meeting>): Promise<Meeting> => {
     return apiRequest<Meeting>('/meetings/', 'POST', meetingData);
 };

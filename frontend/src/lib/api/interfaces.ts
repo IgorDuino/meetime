@@ -14,6 +14,13 @@ export interface Meeting {
     users_time_slots: UserTimeSlot[];
 }
 
+export interface MeetingCreate {
+    title: string;
+    description: string | null;
+    start_date: string;
+    end_date: string;
+}
+
 export interface TimeSlot {
     id: number;
     meeting: number;
@@ -28,5 +35,6 @@ export interface UserTimeSlot {
 }
 
 export interface AuthResponse {
+    key: string | PromiseLike<string>;
     token: string;
 }
