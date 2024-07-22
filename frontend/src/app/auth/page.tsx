@@ -26,15 +26,15 @@ export default function LoginForm() {
     e.preventDefault();
     setLoading(true);
 
-    // try {
-    //   const token = await login(username, password);
-    //   setToken(token);
-    //   router.push("/");
-    // } catch (error) {
-    //   setError(error as string);
-    // } finally {
-    //   setLoading(false);
-    // }
+    try {
+      const token = await login(username, password);
+      setToken(token);
+      router.push("/");
+    } catch (error) {
+      setError(error as string);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
