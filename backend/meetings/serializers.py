@@ -5,7 +5,7 @@ from rest_framework import serializers
 from .models import Meeting, TimeSlot, UserTimeSlot
 
 
-class JoinMeetingSerializer(serializers.Serializer):
+class JoinLeftMeetingSerializer(serializers.Serializer):
     timeslot_id = serializers.IntegerField()
 
 

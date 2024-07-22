@@ -5,7 +5,7 @@ from .permissions import IsOwnerOrStaff, WithAccessCode, any_of, all_of
 from .models import Meeting, TimeSlot, UserTimeSlot
 from .serializers import (
     MeetingSerializer,
-    JoinMeetingSerializer,
+    JoinLeftMeetingSerializer,
 )
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -52,7 +52,7 @@ class MeetingViewSet(MyViewSet):
     @action(detail=True, methods=["post"], url_path="join")
     def join(self, request, pk=None):
         meeting = self.get_object()
-        serializer = JoinMeetingSerializer(data=request.data)
+        serializer = JoinLeftMeetingSerializer(data=request.data)
 
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -75,5 +75,36 @@ class MeetingViewSet(MyViewSet):
         UserTimeSlot.objects.create(user=request.user, timeslot=timeslot)
         return Response(
             {"message": "Successfully joined the time slot."},
+            status=status.HTTP_200_OK,
+        )
+
+    @action(detail=True, methods=["post"], url_path="left")
+    def left(self, request, pk=None):
+        meeting = self.get_object()
+        serializer = JoinLeftMeetingSerializer(data=request.data)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        timeslot_id = serializer.validated_data["timeslot_id"]
+
+        try:
+            timeslot = TimeSlot.objects.get(pk=timeslot_id, meeting=meeting)
+        except TimeSlot.DoesNotExist:
+            return Response(
+                {"error": "Time slot not found."}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        if not UserTimeSlot.objects.filter(
+            user=request.user, timeslot=timeslot
+        ).exists():
+            return Response(
+                {"error": "You haven't joined this time slot."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        UserTimeSlot.objects.filter(user=request.user, timeslot=timeslot).delete()
+        return Response(
+            {"message": "Successfully removed the time slot."},
             status=status.HTTP_200_OK,
         )
