@@ -3,6 +3,7 @@ export enum TimePeekerSlotType {
     Available = 'Available',
 }
 
+
 type TimeSlots = Record<string, TimePeekerSlotType>;
 
 export type WeeklySchedule = Record<string, TimeSlots>;

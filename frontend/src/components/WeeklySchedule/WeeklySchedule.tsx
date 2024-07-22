@@ -3,14 +3,29 @@
 import React from "react";
 import { type TimePeekerProps, TimePeekerSlotType } from "./timepeeker";
 
+export enum WeekDay {
+  Monday = "Mon",
+  Tuesday = "Tue",
+  Wednesday = "Wed",
+  Thursday = "Thu",
+  Friday = "Fri",
+  Saturday = "Sat",
+  Sunday = "Sun",
+}
+
 export const WeeklySchedule: React.FC<TimePeekerProps> = ({
   schedule,
   onSlotClick,
 }) => {
-  const days = Object.keys(schedule);
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-  const times = days.length > 0 ? Object.keys(schedule[days[0]]) : [];
+  const days = Object.keys(schedule) as Array<WeekDay>;
+  const times =
+    days.length > 0
+      ? Object.keys(schedule[days[0]!] as Record<string, TimePeekerSlotType>)
+      : [];
 
+  const getSlot = (day: WeekDay, time: string) => {
+    return schedule[day]![time];
+  };
   const getSlotClass = (slotType: TimePeekerSlotType) => {
     switch (slotType) {
       case TimePeekerSlotType.Busy:
@@ -35,7 +50,7 @@ export const WeeklySchedule: React.FC<TimePeekerProps> = ({
           {days.map((day) => (
             <div
               key={`${day}-${time}`}
-              className={`cursor-pointer border ${getSlotClass(schedule[day][time])}`}
+              className={`cursor-pointer border ${getSlotClass(getSlot(day, time)!)}`}
               onClick={() => onSlotClick(day, time)}
             >
               &nbsp;

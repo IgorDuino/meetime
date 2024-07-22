@@ -6,12 +6,12 @@ await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
 const config = {
-    typescript: {
-        // TODO: return to false
-        ignoreBuildErrors: true,
+    env: {
+        NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
     },
     images: {
         dangerouslyAllowSVG: true,
+        unoptimized: true,
         remotePatterns: [
             {
                 protocol: 'https',
@@ -21,7 +21,9 @@ const config = {
             },
         ],
     },
-
+    experimental: {
+        missingSuspenseWithCSRBailout: false,
+    },
 };
 
 export default config;
