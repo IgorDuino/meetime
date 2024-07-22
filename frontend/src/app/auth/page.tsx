@@ -25,11 +25,16 @@ export default function LoginForm() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
 
-    const token = await login(username, password);
-    setToken(token);
-    router.push("/");
+    // try {
+    //   const token = await login(username, password);
+    //   setToken(token);
+    //   router.push("/");
+    // } catch (error) {
+    //   setError(error as string);
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   return (
@@ -74,11 +79,14 @@ export default function LoginForm() {
             {error && <p className="text-sm text-red-500">{error}</p>}
             <Button
               type="submit"
-              variant="action"
+              variant="secondary"
               className="w-full"
               disabled={loading}
             >
-              {loading ? "Logging in..." : "Login or Sign Up"}
+              {loading ? "Loading..." : "Log In"}
+            </Button>
+            <Button variant="action" className="w-full" disabled={loading}>
+              {loading ? "Loading..." : "Sign Up"}
             </Button>
             <hr />
             <Button variant="outline" className="w-full">

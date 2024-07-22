@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
 import {
   Card,
   CardHeader,
@@ -79,9 +78,7 @@ export default function Component() {
     }
   };
 
-  return;
-  <Suspense>
-    (
+  return (
     <div className="container py-24 lg:py-32">
       <form onSubmit={handleSubmit}>
         <div className="grid gap-8 md:grid-cols-2">
@@ -97,6 +94,7 @@ export default function Component() {
                 <Label htmlFor="name">Name</Label>
                 <Input
                   id="name"
+                  required={true}
                   placeholder="Event name"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
@@ -170,6 +168,5 @@ export default function Component() {
       </form>
       <Toaster />
     </div>
-    )
-  </Suspense>;
+  );
 }
