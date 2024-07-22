@@ -1,0 +1,9 @@
+services:
+  web:
+    build: .
+    env_file:
+      - .env
+    ports:
+      - '6521:8000'
+    volumes:
+      - .:/app

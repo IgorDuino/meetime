@@ -1,10 +1,9 @@
 from pathlib import Path
-from decouple import AutoConfig
+from decouple import config
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-config = AutoConfig(search_path=BASE_DIR.parent)
 
 SECRET_KEY = config("SECRET_KEY")
 
@@ -54,6 +53,8 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
 ]
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 ROOT_URLCONF = "meetime.urls"
 
