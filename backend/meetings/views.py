@@ -18,6 +18,7 @@ class MeetingViewSet(MyViewSet):
 
     permission_classes_by_action = {
         "default": [IsOwnerOrStaff],
+        "list": [IsAuthenticated],
         "create": [AllowAny],
         "retrieve": [any_of(IsOwnerOrStaff, WithAccessCode)],
         "join": [any_of(IsOwnerOrStaff, all_of(IsAuthenticated, WithAccessCode))],
@@ -27,11 +28,17 @@ class MeetingViewSet(MyViewSet):
     }
 
     def list(self, request):
-        queryset = (
-            self.get_queryset()
-            if request.user.is_staff
-            else request.user.meetings.all()
-        )
+        if "participat" in request.query_params.keys():
+            usertimeslots = request.user.usertimeslots.all()
+            queryset = Meeting.objects.filter(
+                timeslots__usertimeslots__in=usertimeslots
+            )
+        else:
+            queryset = (
+                self.get_queryset()
+                if request.user.is_staff
+                else request.user.meetings.all()
+            )
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
