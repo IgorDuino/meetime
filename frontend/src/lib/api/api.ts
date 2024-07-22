@@ -47,6 +47,19 @@ export const login = async (username: string, password: string): Promise<string>
     return response.key;
 };
 
+export const registeration = async (username: string, password1: string, password2: string) => {
+    const url = '/auth/registration/';
+    const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+    };
+    const response = await fetch(`${API_BASE_URL}${url}`, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({ username, password1, password2 }),
+    });
+    return response;
+}
+
 export const fetchMeetings = async (participant=false): Promise<Meeting[]> => {
     const url = participant ? '/meetings/?participant' : '/meetings/';
     return apiRequest<Meeting[]>(url, 'GET');
