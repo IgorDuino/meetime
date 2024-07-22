@@ -28,7 +28,7 @@ class MeetingViewSet(MyViewSet):
     }
 
     def list(self, request):
-        if "participat" in request.query_params.keys():
+        if "participant" in request.query_params.keys():
             usertimeslots = request.user.usertimeslots.all()
             queryset = Meeting.objects.filter(
                 timeslots__usertimeslots__in=usertimeslots
