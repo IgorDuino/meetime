@@ -1,4 +1,5 @@
 import "~/styles/globals.css";
+import { useEffect, useState } from "react"; // P13fd
 
 import Header from "~/components/elements/header";
 import Footer from "~/components/elements/footer";
@@ -17,8 +18,20 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const [theme, setTheme] = useState("light"); // Pec5b
+
+  useEffect(() => { // Pba0e
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    const handleChange = () => {
+      setTheme(mediaQuery.matches ? "dark" : "light");
+    };
+    handleChange();
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, []);
+
   return (
-    <html lang="en" className={`${GeistSans.variable}`}>
+    <html lang="en" className={`${GeistSans.variable} ${theme}`}> // P5538
       <body> 
       <Header />
       <main>
